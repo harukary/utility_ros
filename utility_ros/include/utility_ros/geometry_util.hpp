@@ -106,7 +106,7 @@ namespace geo_u
         std::string label;
         std::vector<cv::Point3d> points;
         std::vector<cv::Point3d> vertices;
-        cv::Point3d center3d;
+        cv::Point3d center3d, min, max;
 
     public:
         BoundingBox3d(){};
@@ -119,7 +119,8 @@ namespace geo_u
         };
         void update()
         {
-            cv::Point3d min, max;
+            min = cv::Point3d(100., 100., 100.);
+            max = cv::Point3d(-100., -100., -100.);
             for (auto p : points)
             {
                 if (p.x < min.x)

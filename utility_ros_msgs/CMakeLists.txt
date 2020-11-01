@@ -52,9 +52,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  Point.msg
-  PointPix3d.msg
-  PointPix3ds.msg
+  Rect.msg
+  BoundingBoxPix3d.msg
+  BoundingBoxesPix3d.msg
 )
 
 ## Generate services in the 'srv' folder
