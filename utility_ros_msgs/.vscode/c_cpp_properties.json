@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/harunancha/ros_ws/devel/include/**",
+                "/home/harunancha/catkin_ws/devel/include/**",
+                "/opt/ros/kinetic/include/**",
+                "/home/harunancha/ros_ws/src/ar_track_alvar/ar_track_alvar/include/**",
+                "/home/harunancha/catkin_ws/src/ceres_test/include/**",
+                "/home/harunancha/catkin_ws/src/gtest_sample/include/**",
+                "/home/harunancha/ros_ws/src/marker_utility/include/**",
+                "/home/harunancha/ros_ws/src/subgraph_matching/include/**",
+                "/home/harunancha/ros_ws/src/test_pkg/include/**",
+                "/home/harunancha/ros_ws/src/utility_ros/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
