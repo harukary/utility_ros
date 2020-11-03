@@ -100,19 +100,22 @@ namespace geo_u
         };
     };
 
-    class BoundingBox3d
+    class BoundingBoxPix3d
     {
     public:
         std::string label;
+        cv::Rect bbPix;
         std::vector<cv::Point3d> points;
-        std::vector<cv::Point3d> vertices;
+        std::vector<cv::Point3d> bb3d;
         cv::Point3d center3d, min, max;
 
     public:
-        BoundingBox3d(){};
-        ~BoundingBox3d(){};
-        BoundingBox3d(std::vector<cv::Point3d> &ps)
+        BoundingBoxPix3d(){};
+        ~BoundingBoxPix3d(){};
+        BoundingBoxPix3d(std::string l, cv::Rect rect, std::vector<cv::Point3d> &ps)
         {
+            label = l;
+            bbPix = rect;
             points.clear();
             points = ps;
             update();
@@ -124,7 +127,7 @@ namespace geo_u
             for (auto p : points)
             {
                 if (p.x < min.x)
-                    min.x = p.x;
+                min.x = p.x;
                 if (p.y < min.y)
                     min.y = p.y;
                 if (p.z < min.z)
@@ -132,20 +135,20 @@ namespace geo_u
                 if (p.x > max.x)
                     max.x = p.x;
                 if (p.y > max.y)
-                    max.y = p.y;
+                max.y = p.y;
                 if (p.z > max.z)
                     max.z = p.z;
             }
             center3d = (min + max) / 2;
-            vertices.clear();
-            vertices.push_back(min);
-            vertices.push_back(cv::Point3d(min.x,min.y,max.z));
-            vertices.push_back(cv::Point3d(max.x,min.y,max.z));
-            vertices.push_back(cv::Point3d(max.x,min.y,min.z));
-            vertices.push_back(cv::Point3d(min.x,max.y,min.z));
-            vertices.push_back(cv::Point3d(min.x,max.y,max.z));
-            vertices.push_back(cv::Point3d(max.x,max.y,min.z));
-            vertices.push_back(max);
+            bb3d.clear();
+            bb3d.push_back(min);
+            bb3d.push_back(cv::Point3d(min.x,min.y,max.z));
+            bb3d.push_back(cv::Point3d(max.x,min.y,max.z));
+            bb3d.push_back(cv::Point3d(max.x,min.y,min.z));
+            bb3d.push_back(cv::Point3d(min.x,max.y,min.z));
+            bb3d.push_back(cv::Point3d(min.x,max.y,max.z));
+            bb3d.push_back(cv::Point3d(max.x,max.y,min.z));
+            bb3d.push_back(max);
         };
     };
     
@@ -156,7 +159,7 @@ namespace geo_u
         return cv::Point3d(tf_p.getX(), tf_p.getY(), tf_p.getZ());
     };
 
-    void tf_bb3d(BoundingBox3d &bb3d, tf::Transform &tf)
+    void tf_bb3d(BoundingBoxPix3d &bb3d, tf::Transform &tf)
     {
         for (auto p : bb3d.points)
         {
