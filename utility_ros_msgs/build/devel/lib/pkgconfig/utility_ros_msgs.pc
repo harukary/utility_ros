@@ -1,8 +1,0 @@
-prefix=/home/harunancha/ros_ws/src/utility_ros/utility_ros_msgs/build/devel
-
-Name: utility_ros_msgs
-Description: Description of utility_ros_msgs
-Version: 0.0.0
-Cflags: -I/home/harunancha/ros_ws/src/utility_ros/utility_ros_msgs/build/devel/include
-Libs: -L${prefix}/lib 
-Requires: 
