@@ -1,4 +1,4 @@
 string Class
-Rect pix
+Rect bbPix
 geometry_msgs/Point[] points
-geometry_msgs/Point center
+geometry_msgs/Point position3d

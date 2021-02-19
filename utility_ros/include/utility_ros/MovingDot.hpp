@@ -6,7 +6,6 @@ TODO: limit the velocity
 #ifndef MOVING_DOT_H_
 #define MOVING_DOT_H_
 
-#include "opencv2/opencv.hpp"
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 

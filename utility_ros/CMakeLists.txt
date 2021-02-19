@@ -136,6 +136,14 @@ target_link_libraries(${PROJECT_NAME}
   ${OpenCV_LIBRARIES}
 )
 
+# add_library(moverio_ros
+#   src/moverio_ros/moverio_ros.cpp
+# )
+# target_link_libraries(moverio_ros
+#   ${catkin_LIBRARIES}
+#   ${OpenCV_LIBRARIES}
+# )
+
 
 add_executable(compile_test src/test/compile_test.cpp)
 add_dependencies(compile_test ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

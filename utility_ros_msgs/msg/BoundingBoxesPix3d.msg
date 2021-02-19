@@ -1,1 +1,0 @@
-BoundingBoxPix3d[] bounding_boxes

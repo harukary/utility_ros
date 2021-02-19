@@ -5,10 +5,11 @@ TODO: kalman filter for nd1d and nd2d
 #define PROBABILITY_DISTRIBUTION_H_
 
 // #include <vector>
-#include "opencv2/opencv.hpp"
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <iostream>
 
+#include "geometry_util.hpp"
 namespace pd_u
 {
     class NormalDistribution1d
@@ -71,6 +72,7 @@ namespace pd_u
     public:
         Mu2d mu;
         Sigma2d sigma;
+        std::vector<cv::Point2d> points;
 
     public:
         NormalDistribution2d(){};
@@ -78,25 +80,34 @@ namespace pd_u
         NormalDistribution2d(Mu2d m, Sigma2d s): mu(m), sigma(s){};
         NormalDistribution2d(std::vector<cv::Point2d> &ps)
         {
-            double mu_x, mu_y, sigma_xx, sigma_yy, sigma_xy;
-            for (const auto &p : ps)
-            {
-                mu_x += p.x;
-                mu_y += p.y;
-                sigma_xx += p.x * p.x;
-                sigma_yy += p.y * p.y;
-                sigma_xy += p.x * p.y;
-            }
-            mu_x /= ps.size();
-            mu_y /= ps.size();
-            sigma_xx = sigma_xx / ps.size() - mu_x * mu_x;
-            sigma_yy = sigma_yy / ps.size() - mu_y * mu_y;
-            sigma_xy = sigma_xy / ps.size() - mu_x * mu_y;
-            mu = Mu2d(mu_x, mu_y);
-            sigma = Sigma2d(sigma_xx, sigma_yy, sigma_xy);
+            points.clear();
+            update(ps);
         };
+        void update(std::vector<cv::Point2d> &ps);
         cv::Point2d random_sampling();
         void kalman_filtering(cv::Point2d p); //TODO:
+    };
+
+    void NormalDistribution2d::update(std::vector<cv::Point2d> &ps)
+    {
+        for (auto p : ps)
+            points.push_back(p);
+        double mu_x, mu_y, sigma_xx, sigma_yy, sigma_xy;
+        for (const auto &p : points)
+        {
+            mu_x += p.x;
+            mu_y += p.y;
+            sigma_xx += p.x * p.x;
+            sigma_yy += p.y * p.y;
+            sigma_xy += p.x * p.y;
+        }
+        mu_x /= points.size();
+        mu_y /= points.size();
+        sigma_xx = sigma_xx / points.size() - mu_x * mu_x;
+        sigma_yy = sigma_yy / points.size() - mu_y * mu_y;
+        sigma_xy = sigma_xy / points.size() - mu_x * mu_y;
+        mu = Mu2d(mu_x, mu_y);
+        sigma = Sigma2d(sigma_xx, sigma_yy, sigma_xy);
     };
 
     cv::Point2d NormalDistribution2d::random_sampling()
@@ -121,14 +132,14 @@ namespace pd_u
             random_point.y = mu.y;
         //ROS_INFO("random (%lf, %lf)", random_point.x, random_point.y);
         return random_point;
-    }
+    };
 
     static double KL_divergence(NormalDistribution1d nd1d1, NormalDistribution1d nd1d2)
     {
         return log(nd1d2.sigma / nd1d1.sigma) + (nd1d1.sigma * nd1d1.sigma + (nd1d1.mu - nd1d2.mu) * (nd1d1.mu - nd1d2.mu) - nd1d2.sigma * nd1d2.sigma) / (2 * nd1d2.sigma * nd1d2.sigma);
     };
 
-    static size_t random_sampling_uniform1i(size_t min, size_t max)
+    static int random_sampling_uniform1i(int min, int max)
     {
         std::random_device rd;
         std::mt19937 mt(rd());
@@ -158,6 +169,7 @@ namespace pd_u
     {
         NormalDistribution2d nd2d(mu, sigma);
         cv::Point2d p = nd2d.random_sampling();
+        std::cout << "noise: " << geo_u::Distance2d(mu, p) << std::endl;
         // ROS_INFO("random: mu[%2.2lf, %2.2lf], sigma[%2.2lf, %2.2lf, %2.2lf]: sample: (%2.2lf, %2.2lf)", mu.x, mu.y, sigma.xx, sigma.yy, sigma.xy, p.x, p.y);
         return p;
     }
@@ -166,7 +178,8 @@ namespace pd_u
     {
         NormalDistribution1d nd1d(mu, sigma);
         double p = nd1d.random_sampling();
-        // ROS_INFO("random: mu: %2.2lf, sigma: %2.2lf sample: %2.2lf", mu, sigma, p);
+        // std::cout << "random error: " << p - mu << std::endl;
+        // std::cout << "random: mu: " << mu << ", sigma: " << sigma << ", sample: " << p << std::endl;
         return p;
     }
 

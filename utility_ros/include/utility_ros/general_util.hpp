@@ -9,7 +9,7 @@ TODO:
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include <Eigen/Dense>
+// #include <Eigen/Dense>
 
 #include "geometry_util.hpp"
 
@@ -26,6 +26,7 @@ namespace util
         return cv::Point3d(p.x, p.y, 0.);
     }
 
+    //
     cv::Point2d cvp_pow2d(cv::Point2d p)
     {
         return cv::Point2d(p.x * p.x, p.y * p.y);
@@ -78,6 +79,17 @@ namespace util
         transform_2to3d(p2d, tf3d);
         return tf3d;
     };
+
+    // 2D pose to 3D point
+    cv::Point3d pose2d_to_p3d(geo_u::Pose2d &p)
+    {
+        return cv::Point3d(p.x, p.y, 0.);
+    };
+    // 3D point to 2D pose
+    geo_u::Pose2d p3d_to_pose2d(cv::Point3d p)
+    {
+        return geo_u::Pose2d(cvp_3to2d(p), 0.);
+    }
 
     std::string get_time_string()
     {

@@ -14,11 +14,13 @@ class Timer
 {
 protected:
     std::map<std::string, double> lap_time;
+    bool cout;
 
 public:
-    Timer(/* args */)
+    Timer(bool out=true)
     {
         lap_time.clear();
+        cout = out;
     };
     ~Timer(){};
     virtual void start(){};
@@ -41,7 +43,7 @@ private:
     double total_duration;
 
 public:
-    ChronoTimer(/* args */): total_paused_time(0.), total_duration(0.){};
+    ChronoTimer(bool out=true): Timer(out), total_paused_time(0.), total_duration(0.){};
     ~ChronoTimer(){};
     void start()
     {
@@ -52,7 +54,8 @@ public:
     {
         std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
         double one_lap = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(now - last_time).count() / 1000.0);
-        std::cout << "\033[33mlap["<< process_name << "]: " << std::round(one_lap) << " [ms]\033[m"<< std::endl;
+        if (cout)
+            std::cout << "\033[33mlap["<< process_name << "]: " << std::round(one_lap) << " [ms]\033[m"<< std::endl;
         lap_time.insert(std::make_pair(process_name, one_lap));
         last_time = now;
         return one_lap;
@@ -76,7 +79,8 @@ public:
     {
         end_time = std::chrono::system_clock::now();
         total_duration = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count() / 1000.0);
-        std::cout << "total duration: " << std::round(total()) << " [ms]" << std::endl;
+        if (cout)
+            std::cout << "total duration: " << std::round(total()) << " [ms]" << std::endl;
     };
 };
 
@@ -94,7 +98,7 @@ private:
     std::map<std::string, double> lap_time;
 
 public:
-    RosTimer(/* args */){};
+    RosTimer(bool out=true): Timer(out){};
     ~RosTimer(){};
     void start()
     {
@@ -106,7 +110,8 @@ public:
         ros::Time now = ros::Time::now();
         ros::Duration one_lap = last_time - now;
         double one_lap_ms = one_lap.toNSec() / 1000000;
-        std::cout << "lap(" << process_name << "): " << std::round(one_lap_ms) << " [ms]" << std::endl;
+        if (cout)
+            std::cout << "lap(" << process_name << "): " << std::round(one_lap_ms) << " [ms]" << std::endl;
         lap_time.insert(std::make_pair(process_name, one_lap_ms));
         last_time = now;
         return one_lap_ms;
@@ -131,7 +136,8 @@ public:
     {
         end_time = ros::Time::now();
         total_duration = end_time - start_time;
-        std::cout << "total duration: " << std::round(total()) << " [ms]" << std::endl;
+        if (cout)
+            std::cout << "total duration: " << std::round(total()) << " [ms]" << std::endl;
     };
 };
 

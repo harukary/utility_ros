@@ -52,9 +52,18 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
+  Command.msg
   Rect.msg
-  BoundingBoxPix3d.msg
-  BoundingBoxesPix3d.msg
+  Object.msg
+  ObjectArray.msg
+  Point2i.msg
+  Point3d.msg
+  Transform2d.msg
+
+  DisplayInfo.msg
+  DisplayPoint.msg
+  DisplayRect.msg
+  DisplayPointArray.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -74,7 +83,7 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  darknet_ros_msgs   geometry_msgs   sensor_msgs#   std_msgs
+  darknet_ros_msgs geometry_msgs sensor_msgs std_msgs
 )
 
 ################################################

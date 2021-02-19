@@ -57,6 +57,7 @@ namespace geo_u
         {
             calc_mat();
         };
+        // Transform2d(Pose2d &from, Pose2d &to){};
 
         void calc_mat()
         {
@@ -100,22 +101,18 @@ namespace geo_u
         };
     };
 
-    class BoundingBoxPix3d
+    class BoundingBox3d
     {
     public:
-        std::string label;
-        cv::Rect bbPix;
         std::vector<cv::Point3d> points;
         std::vector<cv::Point3d> bb3d;
         cv::Point3d center3d, min, max;
 
     public:
-        BoundingBoxPix3d(){};
-        ~BoundingBoxPix3d(){};
-        BoundingBoxPix3d(std::string l, cv::Rect rect, std::vector<cv::Point3d> &ps)
+        BoundingBox3d(){};
+        ~BoundingBox3d(){};
+        BoundingBox3d(std::vector<cv::Point3d> &ps)
         {
-            label = l;
-            bbPix = rect;
             points.clear();
             points = ps;
             update();
@@ -159,7 +156,7 @@ namespace geo_u
         return cv::Point3d(tf_p.getX(), tf_p.getY(), tf_p.getZ());
     };
 
-    void tf_bb3d(BoundingBoxPix3d &bb3d, tf::Transform &tf)
+    void tf_bb3d(BoundingBox3d &bb3d, tf::Transform &tf)
     {
         for (auto p : bb3d.points)
         {
